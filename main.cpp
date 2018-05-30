@@ -17,4 +17,7 @@ int main()
 	{
 		cout << r[i].row << " " << r[i].col << " " << r[i].num << endl;
 	}
+	int a;
+	cin>>a;
+	return 0;
 }
