@@ -1,23 +1,22 @@
-#include"chess.h"
+
+#include"MTCS.h"
+
 
 int main()
 {
 	
 	class chess c;
-	vector<struct position> r;
+	std::vector<struct position> r;
 	c.print();
 	r = c.findall();
 	c.put(r[0]);
-	cout << r[0].row << " " << r[0].col << endl;
-	cout << endl;
+	std::cout << (int)r[0].row << " " << (int)r[0].col << std::endl;
+	std::cout << std::endl;
 	c.print();
 	r.clear();
 	r = c.findall();
-	for (int i = 0; i < r.size(); i++)
+	for (unsigned int i = 0; i < r.size(); i++)
 	{
-		cout << r[i].row << " " << r[i].col << " " << r[i].num << endl;
+		std::cout << (int)r[i].row << " " << (int)r[i].col << " " << (int)r[i].num << std::endl;
 	}
-	int a;
-	cin>>a;
-	return 0;
 }

@@ -7,9 +7,9 @@ void chess::print()
 	{
 		for (int j = 1; j <= 8; j++)
 		{
-			cout << board[i][j] << " ";
+			std::cout << (int)board[i][j] << " ";
 		}
-		cout << endl;
+		std::cout << std::endl;
 	}
 }
 
@@ -19,10 +19,10 @@ struct position chess::check(int row, int col)
 	struct position r;
 	if (board[row][col] != 0)
 		return r;
-	int enemy = 3 - turn;
+	char enemy = 3 - turn;
 	r.row = row;
 	r.col = col;
-	int cnt = 0;
+	char cnt = 0;
 	// check left
 	if (board[row][col - 1] == enemy)
 	{
@@ -162,9 +162,9 @@ struct position chess::check(int row, int col)
 }
 
 
-vector<struct position> chess::findall()
+std::vector<struct position> chess::findall()
 {
-	vector<struct position> vec;
+	std::vector<struct position> vec;
 	for (int i = 1; i <= 8; i++)
 	{
 		for (int j = 1; j <= 8; j++)
@@ -233,12 +233,12 @@ void chess::put(struct position &pos)
 }
 
 
-struct position chess::find_max(vector<struct position> pos)
+struct position chess::find_max(std::vector<struct position> pos)
 {
 	if (pos.size() == 0)
 		return position();
-	int num = pos[0].num;
-	for (int i = 1; i < pos.size(); i++)
+	char num = pos[0].num;
+	for (unsigned int i = 1; i < pos.size(); i++)
 	{
 		if (pos[i].num > num)
 			num = i;
