@@ -104,6 +104,8 @@ inline void chess::set_board(char** board)
 	for (int i = 1; i <= 8; i++)
 		for (int j = 1; j <= 8; j++)
 			this->board[i][j] = board[i - 1][j - 1];
+	set_white();
+	set_black();
 }
 
 inline void chess::set_turn(char turn)
