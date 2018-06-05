@@ -182,6 +182,7 @@ std::vector<struct position> chess::findall()
 
 void chess::put(struct position &pos)
 {
+	//if no change, change the turn
 	if (pos.num == 0)
 	{
 		turn = 3 - turn;
@@ -227,7 +228,19 @@ void chess::put(struct position &pos)
 	{
 		board[j][i] = turn;
 	}
+	//put the chess
 	board[pos.row][pos.col] = turn;
+	//change the black number and white number
+	if (turn == 1)
+	{
+		white -= pos.num;
+		black += pos.num + 1;
+	}
+	else
+	{
+		black -= pos.num;
+		white += pos.num + 1;
+	}
 	turn = 3 - turn;
 	num++;
 }
