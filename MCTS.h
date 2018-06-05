@@ -11,23 +11,23 @@ public:
 	MCTSnode(chess state, char turn);
 	MCTSnode(MCTSnode *father, struct position pos);
 	~MCTSnode() {};
-	int get_win();     //»ñµÃµ±Ç°Ó®ÆåÊı 
-	void set_win();    //ÉèÖÃµ±Ç°Ó®ÆåÊı 
-	int get_total();   //»ñµÃµ±Ç°×ÜÅÌÊı  
-	void set_total();  //ÉèÖÃµ±Ç°×ÜÅÌÊı  
-	chess get_state(); //»ñµÃµ±Ç°×´Ì¬ 
-	void set_state();  //ÉèÖÃµ±Ç°×´Ì¬ 
-	int selection(); //Ñ¡Ôñ½Úµã¼ÆËã 
-	void Simulation(chess state, char turn); //Ä£Äâ 
-	double UCT(int total, int win_child, int total_child); //UCT¼ÆËã¹«Ê½ 
+	int get_win();     //è·å¾—å½“å‰èµ¢æ£‹æ•° 
+	void set_win();    //è®¾ç½®å½“å‰èµ¢æ£‹æ•° 
+	int get_total();   //è·å¾—å½“å‰æ€»ç›˜æ•°  
+	void set_total();  //è®¾ç½®å½“å‰æ€»ç›˜æ•°  
+	chess get_state(); //è·å¾—å½“å‰çŠ¶æ€ 
+	void set_state();  //è®¾ç½®å½“å‰çŠ¶æ€ 
+	int selection(); //é€‰æ‹©èŠ‚ç‚¹è®¡ç®— 
+	int Simulation(chess state);  //æ¨¡æ‹Ÿ 
+	double UCT(int total, int win_child, int total_child); //UCTè®¡ç®—å…¬å¼ 
 	
 private:
-	int win;    //Ê¤ÀûµÄÅÌÊı 
-	int total;  //×ÜÅÌÊı 
-	MCTSnode* father; //¸¸½Úµã 
-	vector<MCTSnode*> children; //¶ù×Ó½Úµã 
-	chess state; //ÆåÅÌ×´Ì¬ 
-	struct position pos; //Âä×ÓÎ»ÖÃ 
+	int win;    //èƒœåˆ©çš„ç›˜æ•° 
+	int total;  //æ€»ç›˜æ•° 
+	MCTSnode* father; //çˆ¶èŠ‚ç‚¹ 
+	vector<MCTSnode*> children; //å„¿å­èŠ‚ç‚¹ 
+	chess state; //æ£‹ç›˜çŠ¶æ€ 
+	struct position pos; //è½å­ä½ç½® 
 }
 
 inline int MCTSnode::get_total()
