@@ -42,11 +42,11 @@ int MCTSnode::Simulation(chess state);
 	
 	flag = 0;
 	while(true){
-		std::vector<MCTSnode> nextValidStep = state.findall();
-		if(flag == 1 && nextValidStep.size() == 0){
+		std::vector<struct position> nextValidPos = state.findall();
+		if(flag == 1 && nextValidPos.size() == 0){
 			break;
 		}
-		else if(nextValidStep.size() == 0){
+		else if(nextValidPos.size() == 0){
 			flag = 1;
 			print("No valid step.\n");
 			position empty_pos;
@@ -55,11 +55,11 @@ int MCTSnode::Simulation(chess state);
 		}
 		else{
 			flag = 0;
-			num_valid_pos = nextValidStep.size();
+			num_valid_pos = nextValidPos.size();
         	uniform_int_distribution<> dis(0, num_valid_pos - 1);
 			int index = dis(gen);
-			MCTSnode nextStep = nextValidStep[index];
-			tmp_state.put(nextStep.pos);
+			struct position nextPos = nextValidPos[index];
+			tmp_state.put(nextPos);
 		}
 	}
 	char nb_white = state.white();
