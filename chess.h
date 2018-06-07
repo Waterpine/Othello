@@ -2,7 +2,7 @@
 #include<iostream>
 #include<vector>
 #include<cstdlib>
-
+#include<memory.h>
 
 struct position
 {

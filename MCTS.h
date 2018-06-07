@@ -3,6 +3,8 @@
 #include<cstdio>
 #include<vector>
 #include<random>
+#include "chess.h"
+#include "timer.h"
 
 using namespace std;
 
@@ -10,38 +12,43 @@ class MCTSnode
 {
 public:
 	MCTSnode(chess state, char turn);
-	MCTSnode(MCTSnode *father, chess state, struct position pos, char turn)
+	MCTSnode(MCTSnode *father, chess state, struct position pos, char turn);
 	~MCTSnode() {};
-	int get_win();     //获得当前赢棋数 
-	void set_win();    //设置当前赢棋数 
-	int get_total();   //获得当前总盘数  
-	void set_total();  //设置当前总盘数  
-	chess get_state(); //获得当前状态 
-	void set_state();  //设置当前状态 
+	int get_win();     //获得当前赢棋�?
+	void set_win();    //设置当前赢棋�?
+	int get_total();   //获得当前总盘�? 
+	void set_total();  //设置当前总盘�? 
+	chess get_state(); //获得当前状�?
+	void set_state();  //设置当前状�?
 	int selection();   //选择节点计算 
-	int Simulation(chess state);  //模拟 
+	int Simulation();  //模拟 
 	double UCT(int total, int win_child, int total_child); //UCT计算公式 
-	struct position getPosition(){return pos};
+  vector<MCTSnode*> get_children(){ return children;}
+	struct position getPosition(){return pos;}
+  void add_child(MCTSnode* new_child){children.push_back(new_child);}
+  MCTSnode* get_father(){return father;}
 	
 private:
-	int win;     	  			//胜利的盘数 
-	int total;  	  			//总盘数 
-	MCTSnode* father; 			//父节点 
+	int win;     	  			//胜利的盘�?
+	int total;  	  			//总盘�?
+	MCTSnode* father; 			//父节�?
 	vector<MCTSnode*> children; //儿子节点 
-	chess state; 				//棋盘状态 
+	chess state; 				//棋盘状�?
 	struct position pos; 		//落子位置 
-}
+};
 
 class MCTStree
 {
 public:
 	MCTStree(chess state, char turn);
-    bool MCTSsearch(double t, struct position pos);
+    bool MCTSsearch(double t, struct position &pos);
 private:
 	MCTSnode* root;
-    struct postion last_position;
+  struct position last_position;
 	char turn;
-}
+};
+
+void MCTSbackpropagation(MCTSnode *node, int win);
 
 inline int MCTSnode::get_total()
 {

@@ -1,5 +1,5 @@
 
-#include"MTCS.h"
+#include"MCTS.h"
 
 
 int main()
