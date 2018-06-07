@@ -1,14 +1,16 @@
 #include "MCTS.h"
 
-MCTSnode::MCTSnode(chess state, char turn) : father(NULL), total(1), win(0), state()
+MCTSnode::MCTSnode(chess state, char turn) : father(NULL), total(0), win(0), state(state)
 {
 	this->state.set_turn(turn);
 }
 
-MCTSnode::MCTSnode(MCTSnode *father, struct position pos) : father(father), pos(pos), total(1), win(0)
+MCTSnode::MCTSnode(MCTSnode *father, chess state, struct position pos, char turn) : father(father), pos(pos), total(0), win(0)
 {
 	this->father = father;
+	this->state = state;
 	this->state.put(pos);
+	this->state.set_turn(turn);
 }
 
 int MCTSnode::selection()
@@ -29,7 +31,7 @@ int MCTSnode::selection()
 
 double MCTSnode::UCT(int total, int win_child, int total_child);
 {
-	int C = 1; //³£Êý 
+	int C = 1; //常数
 	return (win_child / total_child) +  sqrt(C * log(total) / total_child);
 }
 
@@ -76,3 +78,33 @@ int MCTSnode::Simulation(chess state);
 	}
 }
 
+MCTStree::MCTStree(chess state, char turn)
+{
+	this->root = new MCTSnode(state, turn);
+	this->turn = turn;
+}
+
+bool MCTStree::MCTSsearch(double t, struct position pos)
+{
+	timer T;
+	while(T.get_time() < t) //仍然在允许时间内
+	{
+
+	}
+}
+
+void MCTSbackpropagation(MCTSnode *node, int win)
+{
+	MCTSnode *p = node;
+	int factor = 0;
+	char turn = node->state.turn;
+	while(p)
+	{
+		p->set_total();
+		if(turn == p->state.turn)
+		{
+			p->set_win();
+		}
+		p = p->father;
+	}
+}
