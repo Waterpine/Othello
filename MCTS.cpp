@@ -1,20 +1,23 @@
 #include "MCTS.h"
 
-MCTSnode::MCTSnode(chess state, char turn) : father(NULL), total(1), win(0), state()
+MCTSnode::MCTSnode(chess state, char turn) : father(NULL), total(0), win(0), state(state)
 {
 	this->state.set_turn(turn);
 }
 
-MCTSnode::MCTSnode(MCTSnode *father, struct position pos) : father(father), pos(pos), total(1), win(0)
+MCTSnode::MCTSnode(MCTSnode *father, chess state, struct position pos, char turn) : father(father), pos(pos), total(0), win(0)
 {
 	this->father = father;
+	this->state = state;
 	this->state.put(pos);
+	this->state.set_turn(turn);
 }
 
 int MCTSnode::selection()
 {
 	double UCT_value;
 	double max;
+	int index = -1;
 	for (unsigned int i = 0; i < this->children.size(); i++)
 	{
 		UCT_value = UCT(this->total, this->children[i]->win, this->children[i]->total);
@@ -29,7 +32,7 @@ int MCTSnode::selection()
 
 double MCTSnode::UCT(int total, int win_child, int total_child);
 {
-	int C = 1; //³£Êý 
+	int C = 1; //常数
 	return (win_child / total_child) +  sqrt(C * log(total) / total_child);
 }
 
@@ -42,7 +45,7 @@ int MCTSnode::Simulation(chess state);
 	
 	flag = 0;
 	while(true){
-		std::vector<struct position> nextValidPos = state.findall();
+		vector<struct position> nextValidPos = state.findall();
 		if(flag == 1 && nextValidPos.size() == 0){
 			break;
 		}
@@ -76,3 +79,72 @@ int MCTSnode::Simulation(chess state);
 	}
 }
 
+MCTStree::MCTStree(chess state, char turn)
+{
+	this->root = new MCTSnode(state, turn);
+	this->turn = turn;
+}
+
+bool MCTStree::MCTSsearch(double t, struct position &best_pos)
+{
+	timer T;
+	int index;
+	while(T.get_time() < t)
+	{
+		MCTSnode *tmp = root?
+		while(true){
+			index = tmp.selection();
+			if(index == -1){  // find leaf node
+				break;
+			}
+			tmp = tmp.children[index];
+		}
+		vector<struct position> pos = tmp.state.findall();
+		random_device rd;
+    	mt19937 gen(rd());
+		int num_pos = pos.size();
+        uniform_int_distribution<> dis(0, num_pos - 1);
+		int new_index = dis(gen);
+		struct position new_pos = pos[new_index];
+		chess tmp_chess(new_child->state);
+		tmp_chess.put(new_pos);
+		MCTSnode *new_child = (MCTSnode *)malloc(sizeof(MCTSnode *));
+		new_child->father = tmp;
+		new_child->state = tmp_chess;
+		new_child->pos = new_pos;
+		new_child->turn = tmp_chess->turn;
+		MCTSnode new_child(tmp, tmp_chess, new_pos, tmp_chess->turn);
+		tmp.children.push_back(new_child);
+		int win = new_child.Simulation();
+		MCTSbackpropagation(new_child, win);
+	}
+	if(root.children.size() == 0){
+		return false;
+	}
+	double best_score = -999999;
+	double score;
+	for(int i = 0; i < root.children.size(); i++){
+		score = (double)root.children[i].win/(double)root.children[i].total;
+		if(score > best_score){
+			best_score = score;
+			best_pos = root.children[i].getPosition();
+		}
+	}
+	return true;
+}
+
+void MCTSbackpropagation(MCTSnode *node, int win)
+{
+	MCTSnode *p = node;
+	int factor = 0;
+	char turn = node->state.turn;
+	while(p)
+	{
+		p->set_total();
+		if(turn == p->state.turn && win==1)
+		{
+			p->set_win();
+		}
+		p = p->father;
+	}
+}
