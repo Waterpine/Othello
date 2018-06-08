@@ -185,12 +185,7 @@ void chess::put(struct position &pos)
 {
 	unsigned long long sq = pos.row*8+pos.col;
 	unsigned long long tmp = 1;
-	if(sq == 0){
-		tmp = 0;
-	}
-	else{
-		tmp = tmp << sq ;
-	}
+	tmp = tmp << sq ;
 	
 	LL flip=calcFlip(sq, board[turn], board[turn ^ 1]);
 	board[turn] ^= flip;
