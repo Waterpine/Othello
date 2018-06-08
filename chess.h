@@ -42,7 +42,7 @@ public:
 			}
 		}
 	}
-	//receive data
+	//receive data 8*8 matrix
 	void set_board(char** board);
 	//receive turn
 	void set_turn(char turn);
@@ -67,7 +67,7 @@ public:
 	//put a chessman, this function will change turn automatically
 	void put(struct position &pos);
 	//find the position with max num
-	struct position find_max(std::vector<struct position> r);
+	struct position find_max(std::vector<struct position> &r);
 	//judge if game is over
 	bool is_gameover();
 };

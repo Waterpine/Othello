@@ -6,8 +6,6 @@
 #include "chess.h"
 #include "timer.h"
 
-using namespace std;
-
 class MCTSnode
 {
 public:
@@ -24,7 +22,7 @@ public:
 	int selection();   //选择节点计算 
 	int Simulation();  //模拟 
 	double UCT(int total, int win_child, int total_child); //UCT计算公式 
-	vector<MCTSnode*> get_children(){ return children;}
+	std::vector<MCTSnode*> get_children(){ return children;}
 	struct position getPosition(){return pos;}
 	void add_child(MCTSnode* new_child){children.push_back(new_child);}
 	MCTSnode* get_father(){return father;}
@@ -35,7 +33,7 @@ public:
 	int win;     	  			//胜利的盘�?
 	int total;  	  			//总盘�?
 	MCTSnode* father; 			//父节�?
-	vector<MCTSnode*> children; //儿子节点 
+	std::vector<MCTSnode*> children; //儿子节点 
 	chess state; 				//棋盘状�?
 	struct position pos; 		//落子位置 
 };
@@ -53,7 +51,7 @@ public:
 	char turn;
 };
 
-void MCTSbackpropagation(MCTSnode *node, int win);
+void MCTSbackpropagation(MCTSnode *node, MCTSnode *root, int win);
 
 
 inline int MCTSnode::get_total()

@@ -15,8 +15,8 @@
 #define SERVER_PORT 5000  
 #define BUFSIZE 1024
 /* 
- è¿æ¥åˆ°æœåŠ¡å™¨åï¼Œä¼šä¸åœå¾ªç¯ï¼Œç­‰å¾…è¾“å…¥ï¼Œ 
- è¾“å…¥quitåï¼Œæ–­å¼€ä¸æœåŠ¡å™¨çš„è¿æ¥ 
+ Á¬½Óµ½·şÎñÆ÷ºó£¬»á²»Í£Ñ­»·£¬µÈ´ıÊäÈë£¬ 
+ ÊäÈëquitºó£¬¶Ï¿ªÓë·şÎñÆ÷µÄÁ¬½Ó 
  */  
 
 char * create_session(int clientSocket)
@@ -40,11 +40,11 @@ char * create_session(int clientSocket)
  
     ret = write(clientSocket,str1,strlen(str1));
     if (ret < 0) {
-        printf("å‘é€å¤±è´¥ï¼é”™è¯¯ä»£ç æ˜¯%dï¼Œé”™è¯¯ä¿¡æ¯æ˜¯'%s'\n",errno, strerror(errno));
+        printf("·¢ËÍÊ§°Ü£¡´íÎó´úÂëÊÇ%d£¬´íÎóĞÅÏ¢ÊÇ'%s'\n",errno, strerror(errno));
         exit(0);
     }
     else {
-        printf("æ¶ˆæ¯å‘é€æˆåŠŸï¼Œå…±å‘é€äº†%dä¸ªå­—èŠ‚ï¼\n\n", ret);
+        printf("ÏûÏ¢·¢ËÍ³É¹¦£¬¹²·¢ËÍÁË%d¸ö×Ö½Ú£¡\n\n", ret);
     }
  
     FD_ZERO(&t_set1);
@@ -62,7 +62,7 @@ char * create_session(int clientSocket)
         //if (h == 0) continue;
         if (h < 0) {
             close(clientSocket);
-            printf("åœ¨è¯»å–æ•°æ®æŠ¥æ–‡æ—¶SELECTæ£€æµ‹åˆ°å¼‚å¸¸ï¼Œè¯¥å¼‚å¸¸å¯¼è‡´çº¿ç¨‹ç»ˆæ­¢ï¼\n");
+            printf("ÔÚ¶ÁÈ¡Êı¾İ±¨ÎÄÊ±SELECT¼ì²âµ½Òì³££¬¸ÃÒì³£µ¼ÖÂÏß³ÌÖÕÖ¹£¡\n");
             return -1;
         };
  
@@ -71,7 +71,7 @@ char * create_session(int clientSocket)
             i= read(clientSocket, buf, 4095);
             if (i == 0) {
                 close(clientSocket);
-                printf("è¯»å–æ•°æ®æŠ¥æ–‡æ—¶å‘ç°è¿œç«¯å…³é—­ï¼Œè¯¥çº¿ç¨‹ç»ˆæ­¢ï¼\n");
+                printf("¶ÁÈ¡Êı¾İ±¨ÎÄÊ±·¢ÏÖÔ¶¶Ë¹Ø±Õ£¬¸ÃÏß³ÌÖÕÖ¹£¡\n");
                 return -1;
             }
             printf("%s\n", buf);
@@ -140,11 +140,11 @@ char * board(int clientSocket)
  
     ret = write(clientSocket,str1,strlen(str1));
     if (ret < 0) {
-        printf("å‘é€å¤±è´¥ï¼é”™è¯¯ä»£ç æ˜¯%dï¼Œé”™è¯¯ä¿¡æ¯æ˜¯'%s'\n",errno, strerror(errno));
+        printf("·¢ËÍÊ§°Ü£¡´íÎó´úÂëÊÇ%d£¬´íÎóĞÅÏ¢ÊÇ'%s'\n",errno, strerror(errno));
         exit(0);
     }
     else {
-        printf("æ¶ˆæ¯å‘é€æˆåŠŸï¼Œå…±å‘é€äº†%dä¸ªå­—èŠ‚ï¼\n\n", ret);
+        printf("ÏûÏ¢·¢ËÍ³É¹¦£¬¹²·¢ËÍÁË%d¸ö×Ö½Ú£¡\n\n", ret);
     }
  
     FD_ZERO(&t_set1);
@@ -162,7 +162,7 @@ char * board(int clientSocket)
         //if (h == 0) continue;
         if (h < 0) {
             close(clientSocket);
-            printf("åœ¨è¯»å–æ•°æ®æŠ¥æ–‡æ—¶SELECTæ£€æµ‹åˆ°å¼‚å¸¸ï¼Œè¯¥å¼‚å¸¸å¯¼è‡´çº¿ç¨‹ç»ˆæ­¢ï¼\n");
+            printf("ÔÚ¶ÁÈ¡Êı¾İ±¨ÎÄÊ±SELECT¼ì²âµ½Òì³££¬¸ÃÒì³£µ¼ÖÂÏß³ÌÖÕÖ¹£¡\n");
             return -1;
         };
  
@@ -171,7 +171,7 @@ char * board(int clientSocket)
             i= read(clientSocket, buf, 4095);
             if (i == 0) {
                 close(clientSocket);
-                printf("è¯»å–æ•°æ®æŠ¥æ–‡æ—¶å‘ç°è¿œç«¯å…³é—­ï¼Œè¯¥çº¿ç¨‹ç»ˆæ­¢ï¼\n");
+                printf("¶ÁÈ¡Êı¾İ±¨ÎÄÊ±·¢ÏÖÔ¶¶Ë¹Ø±Õ£¬¸ÃÏß³ÌÖÕÖ¹£¡\n");
                 return -1;
             }
             printf("%s\n", buf);
@@ -181,9 +181,9 @@ char * board(int clientSocket)
 
 int main()  
 {  
-    //å®¢æˆ·ç«¯åªéœ€è¦ä¸€ä¸ªå¥—æ¥å­—æ–‡ä»¶æè¿°ç¬¦ï¼Œç”¨äºå’ŒæœåŠ¡å™¨é€šä¿¡  
+    //¿Í»§¶ËÖ»ĞèÒªÒ»¸öÌ×½Ó×ÖÎÄ¼şÃèÊö·û£¬ÓÃÓÚºÍ·şÎñÆ÷Í¨ĞÅ  
     int clientSocket;  
-    //æè¿°æœåŠ¡å™¨çš„socket  
+    //ÃèÊö·şÎñÆ÷µÄsocket  
     struct sockaddr_in serverAddr;  
     int ret, i, h;
     char str1[4096], str2[4096], buf[BUFSIZE], *str;
@@ -198,8 +198,8 @@ int main()
 
     serverAddr.sin_family = AF_INET;  
     serverAddr.sin_port = htons(SERVER_PORT);  
-    //æŒ‡å®šæœåŠ¡å™¨ç«¯çš„ipï¼Œæœ¬åœ°æµ‹è¯•ï¼š127.0.0.1  
-    //inet_addr()å‡½æ•°ï¼Œå°†ç‚¹åˆ†åè¿›åˆ¶IPè½¬æ¢æˆç½‘ç»œå­—èŠ‚åºIP  
+    //Ö¸¶¨·şÎñÆ÷¶ËµÄip£¬±¾µØ²âÊÔ£º127.0.0.1  
+    //inet_addr()º¯Êı£¬½«µã·ÖÊ®½øÖÆIP×ª»»³ÉÍøÂç×Ö½ÚĞòIP  
     serverAddr.sin_addr.s_addr = inet_addr("47.89.179.202");  
     if(connect(clientSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)  
     {  

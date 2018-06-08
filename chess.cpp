@@ -247,7 +247,7 @@ void chess::put(struct position &pos)
 }
 
 
-struct position chess::find_max(std::vector<struct position> pos)
+struct position chess::find_max(std::vector<struct position> &pos)
 {
 	if (pos.size() == 0)
 		return position();

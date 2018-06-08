@@ -43,13 +43,12 @@ int MCTSnode::Simulation()
 	std::vector<struct position> r;
 	r = tmp_state.findall();
 	struct position nextPos;
-	vector<struct position> nextValidPos;
+	std::vector<struct position> nextValidPos;
 	char root_turn = state.get_turn();
-	random_device rd;
-    mt19937 gen(rd());
+	std::random_device rd;
+    std::mt19937 gen(rd());
 	int num_valid_pos;
 	int flag = 0;
-	int count = 0;
 	while(true){
 		nextValidPos = tmp_state.findall();
 		if(flag == 1 && nextValidPos.size() == 0)
@@ -67,7 +66,7 @@ int MCTSnode::Simulation()
 		{
 			flag = 0;
 			num_valid_pos = nextValidPos.size();
-        	uniform_int_distribution<> dis(0, num_valid_pos - 1);
+        	std::uniform_int_distribution<> dis(0, num_valid_pos - 1);
 			int index = dis(gen);
 			nextPos = nextValidPos[index];
 			tmp_state.put(nextPos);
@@ -75,22 +74,13 @@ int MCTSnode::Simulation()
 	}
 	char nb_white = tmp_state.get_white();
 	char nb_black = tmp_state.get_black();
- 	
-
-	if(root_turn == 1)
-	{
-		//black
-		if(nb_black > nb_white) return 1;
-		else if(nb_black == nb_white) return 0;
-		else return -1;
-	}
+	//black win
+	if (nb_black > nb_white)
+		return 1;
+	else if (nb_black < nb_white)
+		return 2;
 	else
-	{
-		//white
-		if(nb_black < nb_white) return 1;
-		else if(nb_black == nb_white) return 0;
-		else return -1;
-	}
+		return 0;
 }
 
 MCTStree::MCTStree(chess state, char turn):turn(turn)
@@ -104,12 +94,10 @@ bool MCTStree::MCTSsearch(double t, struct position &best_pos)
 	timer T;
 	T.start();
 	int index;
-	int count = 0;
 	int win;
 	MCTSnode* pnew_child;
 	while(T.get_time() < t)
 	{
-		count++;
 		MCTSnode *tmp = root;
 		while(true)
 		{
@@ -121,7 +109,7 @@ bool MCTStree::MCTSsearch(double t, struct position &best_pos)
 			}
 			tmp = tmp->get_children()[index];
 		}
-		vector<struct position> pos = tmp->get_state().findall();
+		std::vector<struct position> pos = tmp->get_state().findall();
 		//change turn
 		if (pos.size() == 0)
 		{
@@ -131,30 +119,16 @@ bool MCTStree::MCTSsearch(double t, struct position &best_pos)
 			//if no place to put, game over and propagate
 			if (pos.size() == 0)
 			{
-				//cout << "game over" << endl;
 				char white = tmp->state.get_black();
 				char black = tmp->state.get_white();
-				char leaf_turn = tmp->state.get_turn();
 				int win;
-				if (leaf_turn == 1)
-				{
-					if (black > white)
-						win = 1;
-					else if (black == white)
-						win = 0;
-					else
-						win = -1;
-				}
+				if (black > white)
+					win = 1;
+				else if (black < white)
+					win = 2;
 				else
-				{
-					if (white > black)
-						win = 1;
-					else if (black == white)
-						win = 0;
-					else
-						win = -1;
-				}
-				MCTSbackpropagation(tmp, win);
+					win = 0;
+				MCTSbackpropagation(tmp, root, win);
 				continue;
 			}
 		}
@@ -171,14 +145,13 @@ bool MCTStree::MCTSsearch(double t, struct position &best_pos)
 			pnew_child->total = 0;
 			pnew_child->win = 0;
 			pnew_child->state = tmp_chess;
-			pnew_child->children.clear();
 			tmp->add_child(pnew_child);
 		}
 		win = pnew_child->Simulation();
-		MCTSbackpropagation(pnew_child, win);
+		MCTSbackpropagation(pnew_child, root, win);
 	}
 	//choose which place to put chessman
-	vector<MCTSnode*> root_children = root->get_children();
+	std::vector<MCTSnode*> root_children = root->get_children();
 	if(root_children.size() == 0)
 	{
 		return false;
@@ -197,20 +170,19 @@ bool MCTStree::MCTSsearch(double t, struct position &best_pos)
 	return true;
 }
 
-void MCTSbackpropagation(MCTSnode *node, int win)
+void MCTSbackpropagation(MCTSnode *node, MCTSnode *root, int win)
 {
-  	int count = 0;
+	int count = 0;
+	char root_turn = root->state.get_turn();
 	MCTSnode *p = node;
-	int factor = 0;
-	char turn = node->get_state().get_turn();
-	while(p != nullptr)
+	while (p != nullptr)
 	{
 		p->set_total();
-		if(turn == p->get_state().get_turn() && win == -1)
+		if (root_turn == win && p->get_state().get_turn() != root_turn)
 		{
 			p->set_win();
 		}
-		else if (turn != p->get_state().get_turn() && win == 1)
+		else if (root_turn != win && p->get_state().get_turn() == root_turn)
 		{
 			p->set_win();
 		}
