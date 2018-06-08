@@ -1,4 +1,3 @@
-
 #include"chess.h"
 
 

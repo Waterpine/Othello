@@ -24,12 +24,12 @@ public:
 	int selection();   //选择节点计算 
 	int Simulation();  //模拟 
 	double UCT(int total, int win_child, int total_child); //UCT计算公式 
-  vector<MCTSnode*> get_children(){ return children;}
+	vector<MCTSnode*> get_children(){ return children;}
 	struct position getPosition(){return pos;}
-  void add_child(MCTSnode* new_child){children.push_back(new_child);}
-  MCTSnode* get_father(){return father;}
-  void set_turn(char turn){this->state.set_turn(turn);}
-  void set_father(MCTSnode* father){this->father = father;}
+	void add_child(MCTSnode* new_child){children.push_back(new_child);}
+	MCTSnode* get_father(){return father;}
+	void set_turn(char turn){this->state.set_turn(turn);}
+	 void set_father(MCTSnode* father){this->father = father;}
 	
 //private:
 	int win;     	  			//胜利的盘�?
@@ -49,7 +49,7 @@ public:
     
 //private:
 	MCTSnode* root;
-  struct position last_position;
+	struct position last_position;
 	char turn;
 };
 
