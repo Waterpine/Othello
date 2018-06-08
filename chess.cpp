@@ -11,7 +11,7 @@ void chess::print()
 		}
 		std::cout << std::endl;
 	}
-	std::cout << std::endl;
+	//std::cout << std::endl;
 }
 
 
@@ -229,7 +229,7 @@ void chess::put(struct position &pos)
 	{
 		board[j][i] = turn;
 	}
-	//put the chess
+	//put the chessman
 	board[pos.row][pos.col] = turn;
 	//change the black number and white number
 	if (turn == 1)
@@ -252,12 +252,16 @@ struct position chess::find_max(std::vector<struct position> pos)
 	if (pos.size() == 0)
 		return position();
 	char num = pos[0].num;
+	unsigned int index = 0;
 	for (unsigned int i = 1; i < pos.size(); i++)
 	{
 		if (pos[i].num > num)
-			num = i;
+		{
+			num = pos[i].num;
+			index = i;
+		}
 	}
-	return pos[num];
+	return pos[index];
 }
 
 bool chess::is_gameover()

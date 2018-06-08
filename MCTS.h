@@ -50,11 +50,10 @@ public:
     
 //private:
 	MCTSnode* root;
-	struct position last_position;
 	char turn;
 };
 
-void MCTSbackpropagation(MCTSnode *node, MCTSnode * root, int win);
+void MCTSbackpropagation(MCTSnode *node, int win);
 
 
 inline int MCTSnode::get_total()

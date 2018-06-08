@@ -34,7 +34,7 @@ double MCTSnode::UCT(int total, int win_child, int total_child)
 	int C = 1; //常数
 	if (total_child == 0)
 		return 1e100;
-	return (win_child / total_child) +  sqrt(C * log(total) / total_child);
+	return (win_child / total_child) +  C * sqrt(log(total) / total_child);
 }
 
 int MCTSnode::Simulation()
@@ -93,10 +93,9 @@ int MCTSnode::Simulation()
 	}
 }
 
-MCTStree::MCTStree(chess state, char turn)
+MCTStree::MCTStree(chess state, char turn):turn(turn)
 {
 	this->root = new MCTSnode(state, turn);
-	this->turn = turn;
 }
 
 bool MCTStree::MCTSsearch(double t, struct position &best_pos)
@@ -135,8 +134,9 @@ bool MCTStree::MCTSsearch(double t, struct position &best_pos)
 				//cout << "game over" << endl;
 				char white = tmp->state.get_black();
 				char black = tmp->state.get_white();
+				char leaf_turn = tmp->state.get_turn();
 				int win;
-				if (root->state.get_turn() == 1)
+				if (leaf_turn == 1)
 				{
 					if (black > white)
 						win = 1;
@@ -154,11 +154,11 @@ bool MCTStree::MCTSsearch(double t, struct position &best_pos)
 					else
 						win = -1;
 				}
-				MCTSbackpropagation(tmp, root, win);
+				MCTSbackpropagation(tmp, win);
 				continue;
 			}
-
 		}
+
 		//expand
 		for (unsigned int i = 0; i < pos.size(); i++)
 		{
@@ -175,7 +175,7 @@ bool MCTStree::MCTSsearch(double t, struct position &best_pos)
 			tmp->add_child(pnew_child);
 		}
 		win = pnew_child->Simulation();
-		MCTSbackpropagation(pnew_child, root, win);
+		MCTSbackpropagation(pnew_child, win);
 	}
 	//choose which place to put chessman
 	vector<MCTSnode*> root_children = root->get_children();
@@ -197,7 +197,7 @@ bool MCTStree::MCTSsearch(double t, struct position &best_pos)
 	return true;
 }
 
-void MCTSbackpropagation(MCTSnode *node, MCTSnode *root, int win)
+void MCTSbackpropagation(MCTSnode *node, int win)
 {
   	int count = 0;
 	MCTSnode *p = node;
@@ -206,7 +206,11 @@ void MCTSbackpropagation(MCTSnode *node, MCTSnode *root, int win)
 	while(p != nullptr)
 	{
 		p->set_total();
-		if(turn == p->get_state().get_turn() && win==1)
+		if(turn == p->get_state().get_turn() && win == 1)
+		{
+			p->set_win();
+		}
+		else if (turn != p->get_state().get_turn() && win == -1)
 		{
 			p->set_win();
 		}

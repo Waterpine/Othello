@@ -40,7 +40,7 @@ int main()
 			{
 				cout << "PASS" << endl;
 			}
-			cout << "AI done.\n";
+			cout << "AI done.\n\n";
 			destroy_tree(Tree);
 		}
 		else
@@ -51,9 +51,9 @@ int main()
 			struct position humanpos = c.find_max(posvec);
 			printf("human pos: %d, %d\n", (int)humanpos.row, (int)humanpos.col);
 			c.put(humanpos);
-			c.print();
-			printf("human done!\n");
+			printf("human done!\n\n");
 		}
 		Tree = new MCTStree(c, c.get_turn());
 	}
+	cout << "black is " << c.get_black() << ". white is " << c.get_white() << endl;
 }
