@@ -17,9 +17,49 @@ void destroy_tree(MCTStree *T)
 	delete T;
 }
 
+//change the root of the T according to the received data from the network
+MCTStree* cmp_access(MCTStree *T, chess &src)
+{
+	//if the state is the same, do nothing
+	if (T->root->get_state().equal(src))
+		return T;
+	std::vector<MCTSnode*> vec = T->root->get_children();
+	//if no children, 
+	if (vec.size() == 0)
+		return T;
+	int index = -1;
+	for (int i = 0; i < vec.size(); i++)
+	{
+		if (vec[i]->get_state().equal(src))
+		{
+			index = i;
+			break;
+		}
+	}
+	//cannot find the state, delete the tree and create a new
+	if (index == -1)
+	{
+		for (int i = 0; i < vec.size(); i++)
+		{
+			destroy_node(vec[i]);
+		}
+		delete T->root;
+		return new MCTStree(src, src.get_turn());
+	}
+	//find the state, delete other node and access
+	for (int i = 0; i < vec.size(); i++)
+	{
+		if(i != index)
+			destroy_node(vec[i]);
+	}
+	delete T->root;
+	T->root = vec[index];
+	T->root->father = nullptr;
+	return T;
+}
+
 int main()
 {
-
 	class chess c;
 	MCTStree* Tree = new MCTStree(c, c.get_turn());
 	std::cout << "game start!\n";
@@ -29,6 +69,7 @@ int main()
 	{
 		if (turn == c.get_turn())
 		{
+			Tree = cmp_access(Tree, c);
 			std::cout << "this is ai turn: " << (int)c.get_turn() << std::endl;
 			c.print();
 			if (Tree->MCTSsearch(10, pos))
@@ -42,7 +83,8 @@ int main()
 				c.put(position());
 			}
 			std::cout << "AI done.\n\n";
-			destroy_tree(Tree);
+			Tree = cmp_access(Tree, c);
+			//destroy_tree(Tree);
 		}
 		else
 		{
