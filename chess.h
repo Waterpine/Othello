@@ -46,6 +46,8 @@ public:
 	void set_board(char** board);
 	//receive turn
 	void set_turn(char turn);
+	// get num
+	char get_num();
 	//get turn
 	char get_turn();
 	//print the chess board
@@ -67,6 +69,11 @@ public:
 	//find the position with max num
 	struct position find_max(std::vector<struct position> r);
 };
+
+inline char chess::get_num()
+{
+	return num;
+}
 
 inline void chess::set_black()
 {
