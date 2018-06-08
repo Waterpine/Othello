@@ -14,7 +14,7 @@ class timer
 		int get_time()
 		{
 			clock_t now = clock();
-			return now - start_time;
+			return (now - start_time)/CLOCKS_PER_SEC;
 		}
 		void restart()
 		{

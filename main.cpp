@@ -19,4 +19,17 @@ int main()
 	{
 		std::cout << (int)r[i].row << " " << (int)r[i].col << " " << (int)r[i].num << std::endl;
 	}
+  printf("turn: %d\n", c.get_turn());
+	MCTStree* Tree = new MCTStree(c,c.get_turn());
+  printf("%d\n", Tree->root->get_state().get_turn());
+	struct position pos;
+	if(Tree->MCTSsearch(15, pos))
+	{
+		c.put(pos);
+	}
+	else
+	{
+		cout << "PASS" << endl;
+	}
+
 }
