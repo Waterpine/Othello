@@ -1,3 +1,4 @@
+
 #include"chess.h"
 
 
@@ -11,6 +12,7 @@ void chess::print()
 		}
 		std::cout << std::endl;
 	}
+	std::cout << std::endl;
 }
 
 
@@ -108,10 +110,10 @@ struct position chess::check(int row, int col)
 		}
 	}
 	//check left down
-	if (board[row - 1][col + 1] == enemy)
+	if (board[row + 1][col - 1] == enemy)
 	{
 		cnt = 0;
-		for (int i = row - 1, j = col + 1; i >= 1 && j <= 8; i--, j++)
+		for (int i = row + 1, j = col - 1; i <= 8 && j >= 1; i++, j--)
 		{
 			if (board[i][j] == 0)
 				break;
@@ -125,10 +127,10 @@ struct position chess::check(int row, int col)
 		}
 	}
 	//check right up
-	if (board[row + 1][col - 1] == enemy)
+	if (board[row - 1][col + 1] == enemy)
 	{
 		cnt = 0;
-		for (int i = row + 1, j = col - 1; i <= 8 && j >= 1; i++, j--)
+		for (int i = row - 1, j = col + 1; i >= 1 && j <= 8; i--, j++)
 		{
 			if (board[i][j] == 0)
 				break;
