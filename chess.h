@@ -3,6 +3,10 @@
 #include<vector>
 #include<cstdlib>
 #include<memory.h>
+#define LL unsigned long long
+#define Board unsigned long long
+
+using namespace std;
 
 struct position
 {
@@ -14,19 +18,17 @@ struct position
 
 class chess
 {
-private:
-	char board[10][10];
+//private:
+public:
+	unsigned long long board[2];
 	char turn;
 	char num;
 	char white, black;
-public:
-	chess():turn(1),num(4),white(2), black(2)
+	chess():turn(0),num(4),white(2), black(2)
 	{
-		memset(board, 0, sizeof(char) * 100);
-		//white
-		board[4][4] = board[5][5] = 2;
-		//black
-		board[4][5] = board[5][4] = 1;
+		board[0]=0x0000001008000000;
+		board[1]=0x0000000810000000;
+
 	}
 	chess(const chess & a)
 	{
@@ -34,28 +36,37 @@ public:
 		this->num = a.num;
 		this->white = a.white;
 		this->black = a.black;
-		for (int i = 0; i < 10; i++)
-		{
-			for (int j = 0; j < 10; j++)
-			{
-				this->board[i][j] = a.board[i][j];
-			}
-		}
+		this->board[0]=a.board[0];
+		this->board[1]=a.board[1];
 	}
-	//receive data 8*8 matrix
-	void set_board(char** board);
+
+	inline int popcount(Board x)
+	{
+	#ifdef _MSC_VER
+		return __popcnt64(x);
+	#else
+		return __builtin_popcountll(x);
+	#endif
+	}
+
+	inline int countBlackPieces()
+	{
+		return popcount(board[0]);
+	}
+
+	inline int countWhitePieces()
+	{
+		return popcount(board[1]);
+	}
+
 	//receive turn
 	void set_turn(char turn);
+	// get num
+	char get_num();
 	//get turn
 	char get_turn();
-	//get num of chessman on the board
-	char get_num();
 	//print the chess board
 	void print();
-	//search the board and get the number of black
-	void set_black();
-	//search the board and get the number of white
-	void set_white();
 	//get the black chessman number
 	char get_black();
 	//get the white chessman number
@@ -67,61 +78,26 @@ public:
 	//put a chessman, this function will change turn automatically
 	void put(struct position &pos);
 	//find the position with max num
-	struct position find_max(std::vector<struct position> &r);
-	//judge if game is over
-	bool is_gameover();
+	struct position find_max(std::vector<struct position> r);
+  bool is_gameover();
 };
-
-inline void chess::set_black()
-{
-	char cnt = 0;
-	for (int i = 1; i <= 8; i++)
-		for (int j = 0; j <= 8; j++)
-			if (board[i][j] == 1)
-				cnt++;
-	black = cnt;
-}
-
-inline void chess::set_white()
-{
-	char cnt = 0;
-	for (int i = 1; i <= 8; i++)
-		for (int j = 0; j <= 8; j++)
-			if (board[i][j] == 2)
-				cnt++;
-	white = cnt;
-}
-
-inline char chess::get_black()
-{
-	return black;
-}
-
-inline char chess::get_white()
-{
-	return white;
-}
 
 inline char chess::get_num()
 {
 	return num;
 }
 
-inline void chess::set_board(char** board)
+inline char chess::get_black()
 {
-	memset(board, 0, sizeof(char) * 100);
-	for (int i = 1; i <= 8; i++)
-		for (int j = 1; j <= 8; j++)
-			this->board[i][j] = board[i - 1][j - 1];
-	set_white();
-	set_black();
-	num = white + black;
+	return countBlackPieces();
 }
 
-inline void chess::set_turn(char turn)
+inline char chess::get_white()
 {
-	this->turn = turn;
+	return countWhitePieces();
 }
+
+
 
 inline char chess::get_turn()
 {

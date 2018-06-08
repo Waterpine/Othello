@@ -1,267 +1,218 @@
 #include"chess.h"
 
-
 void chess::print()
 {
-	for (int i = 1; i <= 8; i++)
+	Board own = board[0];
+	Board opp = board[1];
+	char buf[64] = {};
+	for (int i = 0; i < 64; i++)
 	{
-		for (int j = 1; j <= 8; j++)
+		if (own & 1)
 		{
-			std::cout << (int)board[i][j] << " ";
+			buf[i] = '0';
 		}
-		std::cout << std::endl;
+		else if (opp & 1)
+		{
+			buf[i] = '1';
+		}
+		else {
+			buf[i] = '-';
+		}
+		own >>= 1;
+		opp >>= 1;
 	}
-	//std::cout << std::endl;
+	char out[9][9];
+	out[0][0] = 'A';
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			if (i == 0 && j == 0)	continue;
+			if (i == 0)
+			{
+				out[i][j] = '0' + j - 1;
+			}
+			else if (j == 0)
+			{
+				out[i][j] = '0' + i - 1;
+			}
+			else {
+				out[i][j] = buf[(i - 1) * 8 + (j - 1)];
+			}
+		}
+	}
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			cout << out[i][j] << " ";
+		}
+		cout << endl;
+	}
+	cout << endl;
 }
 
-
-struct position chess::check(int row, int col)
+inline Board search_offset_left(Board own, Board enemy,LL mask,LL offset)
 {
-	struct position r;
-	if (board[row][col] != 0)
-		return r;
-	char enemy = 3 - turn;
-	r.row = row;
-	r.col = col;
-	char cnt = 0;
-	// check left
-	if (board[row][col - 1] == enemy)
-	{
-		for (int i = col - 1; i >= 1; i--)
-		{
-			if (board[row][i] == 0)
-				break;
-			else if (board[row][i] == turn)
-			{
-				r.left = cnt;
-				r.num += cnt;
-				break;
-			}
-			cnt++;
-		}
-	}
-	//check right
-	if (board[row][col + 1] == enemy)
-	{
-		cnt = 0;
-		for (int i = col + 1; i <= 8; i++)
-		{
-			if (board[row][i] == 0)
-				break;
-			else if (board[row][i] == turn)
-			{
-				r.right = cnt;
-				r.num += cnt;
-				break;
-			}
-			cnt++;
-		}
-	}
-	//check up
-	if (board[row - 1][col] == enemy)
-	{
-		cnt = 0;
-		for (int i = row - 1; i >= 1; i--)
-		{
-			if (board[i][col] == 0)
-				break;
-			else if (board[i][col] == turn)
-			{
-				r.up = cnt;
-				r.num += cnt;
-				break;
-			}
-			cnt++;
-		}
-	}
-	//check down
-	if(board[row + 1][col] == enemy)
-	{
-		cnt = 0;
-		for (int i = row + 1; i <= 8; i++)
-		{
-			if (board[i][col] == 0)
-				break;
-			else if (board[i][col] == turn)
-			{
-				r.down = cnt;
-				r.num += cnt;
-				break;
-			}
-			cnt++;
-		}
-	}
-	//check left up
-	if (board[row - 1][col - 1] == enemy)
-	{
-		cnt = 0;
-		for (int i = row - 1, j = col - 1; i >= 1 && j >= 1; i--, j--)
-		{
-			if (board[i][j] == 0)
-				break;
-			else if (board[i][j] == turn)
-			{
-				r.leftup = cnt;
-				r.num += cnt;
-				break;
-			}
-			cnt++;
-		}
-	}
-	//check left down
-	if (board[row + 1][col - 1] == enemy)
-	{
-		cnt = 0;
-		for (int i = row + 1, j = col - 1; i <= 8 && j >= 1; i++, j--)
-		{
-			if (board[i][j] == 0)
-				break;
-			else if (board[i][j] == turn)
-			{
-				r.leftdown = cnt;
-				r.num += cnt;
-				break;
-			}
-			cnt++;
-		}
-	}
-	//check right up
-	if (board[row - 1][col + 1] == enemy)
-	{
-		cnt = 0;
-		for (int i = row - 1, j = col + 1; i >= 1 && j <= 8; i--, j++)
-		{
-			if (board[i][j] == 0)
-				break;
-			else if (board[i][j] == turn)
-			{
-				r.rightup = cnt;
-				r.num += cnt;
-				break;
-			}
-			cnt++;
-		}
-	}
-	//check right down
-	if (board[row + 1][col + 1] == enemy)
-	{
-		cnt = 0;
-		for (int i = row + 1, j = col + 1; i <= 8 && j <= 8; i++, j++)
-		{
-			if (board[i][j] == 0)
-				break;
-			else if (board[i][j] == turn)
-			{
-				r.rightdown = cnt;
-				r.num += cnt;
-				break;
-			}
-			cnt++;
-		}
-	}
-	return r;
+	LL e = enemy & mask;
+	LL blank = ~(own | enemy);
+	LL t = e & (own >> offset);
+	t |= e & (t >> offset);
+	t |= e & (t >> offset);
+	t |= e & (t >> offset);
+	t |= e & (t >> offset);
+	t |= e & (t >> offset);
+	return blank & (t >> offset);
 }
 
-
-std::vector<struct position> chess::findall()
+inline Board search_offset_right(Board own, Board enemy, LL mask, LL offset)
 {
-	std::vector<struct position> vec;
-	for (int i = 1; i <= 8; i++)
-	{
-		for (int j = 1; j <= 8; j++)
-		{
-			struct position pos = check(i, j);
-			if (pos.num != 0)
-			{
-				vec.push_back(pos);
-			}
-		}
-	}
-	return vec;
+	LL e = enemy & mask;
+	LL blank = ~(own | enemy);
+	LL t = e & (own << offset);
+	t |= e & (t << offset);
+	t |= e & (t << offset);
+	t |= e & (t << offset);
+	t |= e & (t << offset);
+	t |= e & (t << offset);
+	return blank & (t << offset);
 }
+	
+
+inline std::vector<struct position> chess::findall()
+{
+	/**
+	 *  Description:
+	 *  @param own: bitboard (0=top left, 63=bottom right)
+	 *  @param enemy: bitboard
+	 *  @return: all posible moves
+	 */
+	Board own = board[turn];
+	Board enemy = board[turn^1];
+	LL left_right_mask = 0x7e7e7e7e7e7e7e7eull;
+	LL top_bottom_mask = 0x00ffffffffffff00ull;
+	LL mask = left_right_mask & top_bottom_mask;
+	LL mobility = 0;
+	mobility |= search_offset_left(own, enemy, left_right_mask, 1);
+	mobility |= search_offset_left(own, enemy, mask, 9);
+	mobility |= search_offset_left(own, enemy, top_bottom_mask, 8);
+	mobility |= search_offset_left(own, enemy, mask, 7);
+	mobility |= search_offset_right(own, enemy, left_right_mask, 1);
+	mobility |= search_offset_right(own, enemy, mask, 9);
+	mobility |= search_offset_right(own, enemy, top_bottom_mask, 8);
+	mobility |= search_offset_right(own, enemy, mask, 7);
+	int count = 0;
+	vector<struct position> validPos;
+	struct position tmpPos;
+	for(; mobility != 0; mobility = mobility>>1){
+		if(mobility&1){
+			
+			tmpPos.row = count/8;
+			tmpPos.col = count%8;
+			validPos.push_back(tmpPos);
+		}
+		count++;
+	}
+
+	return validPos;
+}
+
+inline Board flip_vertical(Board x)
+{
+	LL k1 = 0x00FF00FF00FF00FFull;
+	LL k2 = 0x0000FFFF0000FFFFull;
+	x = ((x >> 8) & k1) | ((x & k1) << 8);
+	x = ((x >> 16) & k2) | ((x & k2) << 16);
+	x = (x >> 32) | (x << 32);
+	return x;
+}
+
+inline Board flip_diag_a1h8(Board x)
+{
+	LL k1 = 0x5500550055005500ull;
+	LL k2 = 0x3333000033330000ull;
+	LL k4 = 0x0f0f0f0f00000000ull;
+	LL t = k4 & (x ^ (x << 28));
+	x ^= t ^ (t >> 28);
+	t = k2 & (x ^ (x << 14));
+	x ^= t ^ (t >> 14);
+	t = k1 & (x ^ (x << 7));
+	x ^= t ^ (t >> 7);
+	return x;
+}
+
+inline Board rotate90(Board x)
+{
+	return flip_diag_a1h8(flip_vertical(x));
+}
+
+inline Board rotate180(Board x)
+{
+	return rotate90(rotate90(x));
+}
+
+inline Board calcFlipHalf(int pos, Board own, Board opp)
+{
+	LL el[4] = { opp, opp & 0x7e7e7e7e7e7e7e7eull, opp & 0x7e7e7e7e7e7e7e7eull, opp & 0x7e7e7e7e7e7e7e7eull };
+	LL masks[4] = { 0x0101010101010100ull<<pos, 0x00000000000000feull<<pos, 0x0002040810204080ull<<pos, 0x8040201008040200ull<<pos };
+	Board ans = 0;
+	LL out = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		out = masks[i] & ((el[i] | ~masks[i]) + 1) & own;
+		ans |= (out - (out != 0))& masks[i];
+	}
+	return ans;
+}
+
+inline Board calcFlip(int pos, Board own, Board opp)
+{
+	/**
+	 *  Description
+	 *  @param pos: 0-63, the position to take
+	 *  @param own: bitboard (0=top left, 63=bottom right)
+	 *  @param opp: bitboard
+	 *  @param return: flip the stones of the enemy when I place stone at pos
+	 */
+	Board f1 = calcFlipHalf(pos, own, opp);
+	Board f2 = calcFlipHalf((~pos)&63, rotate180(own), rotate180(opp));
+	return f1 | rotate180(f2);
+}
+
 
 
 void chess::put(struct position &pos)
 {
-	//if no change, change the turn
-	if (pos.num == 0)
-	{
-		turn = 3 - turn;
-		return;
+	unsigned long long sq = pos.row*8+pos.col;
+	unsigned long long tmp = 1;
+	if(sq == 0){
+		tmp = 0;
 	}
-	//left
-	for (int i = pos.col - 1; i >= pos.col - pos.left; i--)
-	{
-		board[pos.row][i] = turn;
+	else{
+		tmp = tmp << sq ;
 	}
-	//right
-	for (int i = pos.col + 1; i <= pos.col + pos.right; i++)
-	{
-		board[pos.row][i] = turn;
-	}
-	//up
-	for (int i = pos.row - 1; i >= pos.row - pos.up; i--)
-	{
-		board[i][pos.col] = turn;
-	}
-	//down
-	for (int i = pos.row + 1; i <= pos.row + pos.down; i++)
-	{
-		board[i][pos.col] = turn;
-	}
-	//leftup
-	for (int i = pos.col - 1, j = pos.row - 1; i >= pos.col - pos.leftup; i--, j--)
-	{
-		board[j][i] = turn;
-	}
-	//leftdown
-	for (int i = pos.col - 1, j = pos.row + 1; i >= pos.col - pos.leftdown; i--, j++)
-	{
-		board[j][i] = turn;
-	}
-	//rightup
-	for (int i = pos.col + 1, j = pos.row - 1; i <= pos.col + pos.rightup; i++, j--)
-	{
-		board[j][i] = turn;
-	}
-	//rightdown
-	for (int i = pos.col + 1, j = pos.row + 1; i <= pos.col + pos.rightdown; i++, j++)
-	{
-		board[j][i] = turn;
-	}
-	//put the chessman
-	board[pos.row][pos.col] = turn;
-	//change the black number and white number
-	if (turn == 1)
-	{
-		white -= pos.num;
-		black += pos.num + 1;
-	}
-	else
-	{
-		black -= pos.num;
-		white += pos.num + 1;
-	}
-	turn = 3 - turn;
+	
+	LL flip=calcFlip(sq, board[turn], board[turn ^ 1]);
+	board[turn] ^= flip;
+
+	board[turn ^ 1] ^= flip;
+	board[turn] |= tmp;
+	turn ^= 1;
 	num++;
 }
 
 
-struct position chess::find_max(std::vector<struct position> &pos)
+struct position chess::find_max(std::vector<struct position> pos)
 {
 	if (pos.size() == 0)
 		return position();
 	char num = pos[0].num;
-	unsigned int index = 0;
 	for (unsigned int i = 1; i < pos.size(); i++)
 	{
 		if (pos[i].num > num)
-		{
-			num = pos[i].num;
-			index = i;
-		}
+			num = i;
 	}
-	return pos[index];
+	return pos[num];
 }
 
 bool chess::is_gameover()
@@ -269,9 +220,9 @@ bool chess::is_gameover()
 	std::vector<struct position> pos = this->findall();
 	if (!pos.empty())
 		return false;
-	turn = 3 - turn;
+	turn = turn^1;
 	pos = this->findall();
-	turn = 3 - turn;
+	turn = turn^1;
 	if (!pos.empty())
 		return false;
 	return true;
