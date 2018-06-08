@@ -156,7 +156,8 @@ bool MCTStree::MCTSsearch(double t, struct position &best_pos)
 		if (pos.size() == 0)
 		{
 			//put an empty chessman and it will change turn
-			tmp->state.put(position());
+      struct position emptypos;
+			tmp->state.put(emptypos);
 			pos = tmp->get_state().findall();
 			//if no place to put, game over and propagate
 			if (pos.size() == 0)

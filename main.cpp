@@ -10,11 +10,12 @@ int main()
 	Tree->root->state.print();
 	struct position pos;
 	char turn = c.get_turn();
-	while((int)Tree->state.get_num() != 64)
+  int x, y;
+	while((int)c.get_num() != 64)
 	{
 		if(turn == c.get_turn())
 		{
-			if(Tree->MCTSsearch(15, pos))
+			if(Tree->MCTSsearch(10, pos))
 			{
 				c.print();
 				cout << "the turn is " << (int)c.get_turn() << endl;
@@ -28,11 +29,24 @@ int main()
 		}
 		else
 		{
-			scanf("%d %d\n",&x,&y);
-			struct position humanpos;
-			humanpos.row = x;
-			humanpos.col = y;
+      printf("this is human turn:\n");
+      c.print();
+      vector<struct position> posvec = c.findall();
+      int size = posvec.size();
+      printf("%d\n",size);
+      scanf("%d",&x);
+      struct position humanpos = posvec[x-1];
+      printf("%d %d\n",(int)humanpos.row, (int)humanpos.col);
+      getchar();
+      getchar();
+      getchar();
 			c.put(humanpos);
+      c.print();
+      getchar();
+      getchar();
+      getchar();
+      printf("human done!");
 		}
+    Tree = new MCTStree(c,c.get_turn());
 	}
 }
