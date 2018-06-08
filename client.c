@@ -16,8 +16,8 @@
 #define BUFSIZE 1024
 
 /* 
- Á¬½Óµ½·þÎñÆ÷ºó£¬»á²»Í£Ñ­»·£¬µÈ´ýÊäÈë£¬ 
- ÊäÈëquitºó£¬¶Ï¿ªÓë·þÎñÆ÷µÄÁ¬½Ó 
+ ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ó£¬»á²»Í£Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½È´ï¿½ï¿½ï¿½ï¿½ë£¬ 
+ ï¿½ï¿½ï¿½ï¿½quitï¿½ó£¬¶Ï¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
  */  
 
 int create_session(int clientSocket)
@@ -41,11 +41,11 @@ int create_session(int clientSocket)
  
     ret = write(clientSocket,str1,strlen(str1));
     if (ret < 0) {
-        printf("·¢ËÍÊ§°Ü£¡´íÎó´úÂëÊÇ%d£¬´íÎóÐÅÏ¢ÊÇ'%s'\n",errno, strerror(errno));
+        printf("ï¿½ï¿½ï¿½ï¿½Ê§ï¿½Ü£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½%dï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½'%s'\n",errno, strerror(errno));
         exit(0);
     }
     else {
-        printf("ÏûÏ¢·¢ËÍ³É¹¦£¬¹²·¢ËÍÁË%d¸ö×Ö½Ú£¡\n\n", ret);
+        printf("ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½Í³É¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½%dï¿½ï¿½ï¿½Ö½Ú£ï¿½\n\n", ret);
     }
  
     FD_ZERO(&t_set1);
@@ -63,7 +63,7 @@ int create_session(int clientSocket)
         //if (h == 0) continue;
         if (h < 0) {
             close(clientSocket);
-            printf("ÔÚ¶ÁÈ¡Êý¾Ý±¨ÎÄÊ±SELECT¼ì²âµ½Òì³££¬¸ÃÒì³£µ¼ÖÂÏß³ÌÖÕÖ¹£¡\n");
+            printf("ï¿½Ú¶ï¿½È¡ï¿½ï¿½ï¿½Ý±ï¿½ï¿½ï¿½Ê±SELECTï¿½ï¿½âµ½ï¿½ì³£ï¿½ï¿½ï¿½ï¿½ï¿½ì³£ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½ï¿½ï¿½Ö¹ï¿½ï¿½\n");
             return -1;
         };
  
@@ -72,7 +72,7 @@ int create_session(int clientSocket)
             i = read(clientSocket, buf, 4095);
             if (i == 0) {
                 close(clientSocket);
-                printf("¶ÁÈ¡Êý¾Ý±¨ÎÄÊ±·¢ÏÖÔ¶¶Ë¹Ø±Õ£¬¸ÃÏß³ÌÖÕÖ¹£¡\n");
+                printf("ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ý±ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½Ë¹Ø±Õ£ï¿½ï¿½ï¿½ï¿½ß³ï¿½ï¿½ï¿½Ö¹ï¿½ï¿½\n");
                 return -1;
             }
             printf("%s\n", buf);
@@ -87,7 +87,7 @@ int move(int clientSocket, char* x_pos, char* y_pos, char* player)
     int send_num;
     char recv_buf [4096];
     char str1[4096];
-    char * stm = NULL;
+    char stm[4096];
     strcat(stm, x_pos);
     strcat(stm,"/");
     strcat(stm, y_pos);
@@ -150,11 +150,11 @@ int board(int clientSocket)
  
     ret = write(clientSocket,str1,strlen(str1));
     if (ret < 0) {
-        printf("·¢ËÍÊ§°Ü£¡´íÎó´úÂëÊÇ%d£¬´íÎóÐÅÏ¢ÊÇ'%s'\n",errno, strerror(errno));
+        printf("ï¿½ï¿½ï¿½ï¿½Ê§ï¿½Ü£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½%dï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½'%s'\n",errno, strerror(errno));
         exit(0);
     }
     else {
-        printf("ÏûÏ¢·¢ËÍ³É¹¦£¬¹²·¢ËÍÁË%d¸ö×Ö½Ú£¡\n\n", ret);
+        printf("ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½Í³É¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½%dï¿½ï¿½ï¿½Ö½Ú£ï¿½\n\n", ret);
     }
  
     FD_ZERO(&t_set1);
@@ -172,7 +172,7 @@ int board(int clientSocket)
         //if (h == 0) continue;
         if (h < 0) {
             close(clientSocket);
-            printf("ÔÚ¶ÁÈ¡Êý¾Ý±¨ÎÄÊ±SELECT¼ì²âµ½Òì³££¬¸ÃÒì³£µ¼ÖÂÏß³ÌÖÕÖ¹£¡\n");
+            printf("ï¿½Ú¶ï¿½È¡ï¿½ï¿½ï¿½Ý±ï¿½ï¿½ï¿½Ê±SELECTï¿½ï¿½âµ½ï¿½ì³£ï¿½ï¿½ï¿½ï¿½ï¿½ì³£ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½ï¿½ï¿½Ö¹ï¿½ï¿½\n");
             return -1;
         };
  
@@ -181,7 +181,7 @@ int board(int clientSocket)
             i= read(clientSocket, buf, 4095);
             if (i == 0) {
                 close(clientSocket);
-                printf("¶ÁÈ¡Êý¾Ý±¨ÎÄÊ±·¢ÏÖÔ¶¶Ë¹Ø±Õ£¬¸ÃÏß³ÌÖÕÖ¹£¡\n");
+                printf("ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ý±ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½Ë¹Ø±Õ£ï¿½ï¿½ï¿½ï¿½ß³ï¿½ï¿½ï¿½Ö¹ï¿½ï¿½\n");
                 return -1;
             }
             printf("%s\n", buf);
@@ -191,9 +191,9 @@ int board(int clientSocket)
 
 int main()  
 {  
-    //¿Í»§¶ËÖ»ÐèÒªÒ»¸öÌ×½Ó×ÖÎÄ¼þÃèÊö·û£¬ÓÃÓÚºÍ·þÎñÆ÷Í¨ÐÅ  
+    //ï¿½Í»ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ÒªÒ»ï¿½ï¿½ï¿½×½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÚºÍ·ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½  
     int clientSocket;  
-    //ÃèÊö·þÎñÆ÷µÄsocket  
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½socket  
     struct sockaddr_in serverAddr;  
     int ret, i, h;
     char str1[4096], str2[4096], buf[BUFSIZE], *str;
@@ -208,8 +208,8 @@ int main()
 
     serverAddr.sin_family = AF_INET;  
     serverAddr.sin_port = htons(SERVER_PORT);  
-    //Ö¸¶¨·þÎñÆ÷¶ËµÄip£¬±¾µØ²âÊÔ£º127.0.0.1  
-    //inet_addr()º¯Êý£¬½«µã·ÖÊ®½øÖÆIP×ª»»³ÉÍøÂç×Ö½ÚÐòIP  
+    //Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½ipï¿½ï¿½ï¿½ï¿½ï¿½Ø²ï¿½ï¿½Ô£ï¿½127.0.0.1  
+    //inet_addr()ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê®ï¿½ï¿½ï¿½ï¿½IP×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½IP  
     serverAddr.sin_addr.s_addr = inet_addr("47.89.179.202");  
     if(connect(clientSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)  
     {  
