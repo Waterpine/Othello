@@ -40,6 +40,17 @@ public:
 		this->board[1]=a.board[1];
 	}
 
+	bool equal(const chess & a){
+		if(this->turn == a.turn;
+		this->num == a.num;
+		this->white == a.white;
+		this->black == a.black;
+		this->board[0]==a.board[0];
+		this->board[1]==a.board[1];)
+			return true;
+		else return false;
+	}
+
 	inline int popcount(Board x)
 	{
 	#ifdef _MSC_VER
