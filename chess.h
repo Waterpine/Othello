@@ -113,6 +113,7 @@ inline void chess::set_board(char** board)
 			this->board[i][j] = board[i - 1][j - 1];
 	set_white();
 	set_black();
+	num = white + black;
 }
 
 inline void chess::set_turn(char turn)
