@@ -206,11 +206,11 @@ void MCTSbackpropagation(MCTSnode *node, int win)
 	while(p != nullptr)
 	{
 		p->set_total();
-		if(turn == p->get_state().get_turn() && win == 1)
+		if(turn == p->get_state().get_turn() && win == -1)
 		{
 			p->set_win();
 		}
-		else if (turn != p->get_state().get_turn() && win == -1)
+		else if (turn != p->get_state().get_turn() && win == 1)
 		{
 			p->set_win();
 		}

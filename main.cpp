@@ -39,6 +39,7 @@ int main()
 			else
 			{
 				cout << "PASS" << endl;
+				c.put(position());
 			}
 			cout << "AI done.\n\n";
 			destroy_tree(Tree);
@@ -48,12 +49,24 @@ int main()
 			printf("this is human turn:\n");
 			c.print();
 			vector<struct position> posvec = c.findall();
-			struct position humanpos = c.find_max(posvec);
+			if (posvec.size() == 0)
+			{
+				c.put(position());
+				continue;
+			}
+			//random
+			random_device rd;
+			mt19937 gen(rd());
+			uniform_int_distribution<> dis(0, posvec.size() - 1);
+			int index = dis(gen);
+			struct position humanpos = posvec[index];
+			//local maximum
+			//struct position humanpos = c.find_max(posvec);
 			printf("human pos: %d, %d\n", (int)humanpos.row, (int)humanpos.col);
 			c.put(humanpos);
 			printf("human done!\n\n");
 		}
 		Tree = new MCTStree(c, c.get_turn());
 	}
-	cout << "black is " << c.get_black() << ". white is " << c.get_white() << endl;
+	cout << "black is " << (int)c.get_black() << ". white is " << (int)c.get_white() << endl;
 }
