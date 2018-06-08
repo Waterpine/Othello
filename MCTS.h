@@ -11,7 +11,7 @@ using namespace std;
 class MCTSnode
 {
 public:
-	MCTSnode();
+	MCTSnode() {};
 	MCTSnode(chess state, char turn);
 	MCTSnode(MCTSnode *father, chess state, struct position pos);
 	~MCTSnode() {};
@@ -44,6 +44,7 @@ class MCTStree
 {
 public:
 	MCTStree(chess state, char turn);
+	~MCTStree() { };
     bool MCTSsearch(double t, struct position &pos);
     char get_turn(){return turn;}
     
@@ -54,6 +55,7 @@ public:
 };
 
 void MCTSbackpropagation(MCTSnode *node, MCTSnode * root, int win);
+
 
 inline int MCTSnode::get_total()
 {

@@ -1,52 +1,59 @@
-
 #include"MCTS.h"
 
+//a function for destroy node
+void destroy_node(MCTSnode *root)
+{
+	for (unsigned int i = 0; i < root->children.size(); i++)
+	{
+		destroy_node(root->children[i]);
+	}
+	delete root;
+}
+
+//destroy the tree
+void destroy_tree(MCTStree *T)
+{
+	destroy_node(T->root);
+	delete T;
+}
 
 int main()
 {
-	
+
 	class chess c;
-	MCTStree* Tree = new MCTStree(c,c.get_turn());
-	Tree->root->state.print();
+	MCTStree* Tree = new MCTStree(c, c.get_turn());
+	cout << "game start!\n";
 	struct position pos;
 	char turn = c.get_turn();
-  int x, y;
-	while((int)c.get_num() != 64)
+	while (!c.is_gameover())
 	{
-		if(turn == c.get_turn())
+		if (turn == c.get_turn())
 		{
-			if(Tree->MCTSsearch(10, pos))
+			cout << "this is ai turn: " << (int)c.get_turn() << endl;
+			c.print();
+			if (Tree->MCTSsearch(10, pos))
 			{
-				c.print();
-				cout << "the turn is " << (int)c.get_turn() << endl;
-				cout << (int)pos.row << ", " << (int)pos.col << endl;
+				cout <<"ai pos: "<< (int)pos.row << ", " << (int)pos.col << endl;
 				c.put(pos);
 			}
 			else
 			{
 				cout << "PASS" << endl;
 			}
+			cout << "AI done.\n";
+			destroy_tree(Tree);
 		}
 		else
 		{
-      printf("this is human turn:\n");
-      c.print();
-      vector<struct position> posvec = c.findall();
-      int size = posvec.size();
-      printf("%d\n",size);
-      scanf("%d",&x);
-      struct position humanpos = posvec[x-1];
-      printf("%d %d\n",(int)humanpos.row, (int)humanpos.col);
-      getchar();
-      getchar();
-      getchar();
+			printf("this is human turn:\n");
+			c.print();
+			vector<struct position> posvec = c.findall();
+			struct position humanpos = c.find_max(posvec);
+			printf("human pos: %d, %d\n", (int)humanpos.row, (int)humanpos.col);
 			c.put(humanpos);
-      c.print();
-      getchar();
-      getchar();
-      getchar();
-      printf("human done!");
+			c.print();
+			printf("human done!\n");
 		}
-    Tree = new MCTStree(c,c.get_turn());
+		Tree = new MCTStree(c, c.get_turn());
 	}
 }

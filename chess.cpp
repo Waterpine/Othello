@@ -259,3 +259,16 @@ struct position chess::find_max(std::vector<struct position> pos)
 	}
 	return pos[num];
 }
+
+bool chess::is_gameover()
+{
+	std::vector<struct position> pos = this->findall();
+	if (!pos.empty())
+		return false;
+	turn = 3 - turn;
+	pos = this->findall();
+	turn = 3 - turn;
+	if (!pos.empty())
+		return false;
+	return true;
+}

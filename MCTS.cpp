@@ -1,11 +1,5 @@
 #include "MCTS.h"
 
-MCTSnode::MCTSnode()
-{
-
-}
-
-
 MCTSnode::MCTSnode(chess state, char turn) : father(NULL), total(0), win(0), state(state)
 {
 	this->state.set_turn(turn);
@@ -46,19 +40,8 @@ double MCTSnode::UCT(int total, int win_child, int total_child)
 int MCTSnode::Simulation()
 {
 	chess tmp_state(state);
-	//cout << "init state" << endl;
-  	//tmp_state.print();
-	//cout << "init turn: " << (int)this->state.get_turn() << endl;
 	std::vector<struct position> r;
 	r = tmp_state.findall();
-	
-	/*
-	cout << "all posible pos" << endl;
-	for (unsigned int i = 0; i < r.size(); i++)
-	{
-		std::cout << (int)r[i].row << " " << (int)r[i].col << " " << (int)r[i].num << std::endl;
-	}
-	*/
 	struct position nextPos;
 	vector<struct position> nextValidPos;
 	char root_turn = state.get_turn();
@@ -68,7 +51,6 @@ int MCTSnode::Simulation()
 	int flag = 0;
 	int count = 0;
 	while(true){
-    	//printf("count: %d\n", count++);
 		nextValidPos = tmp_state.findall();
 		if(flag == 1 && nextValidPos.size() == 0)
 		{
@@ -77,7 +59,6 @@ int MCTSnode::Simulation()
 		else if(nextValidPos.size() == 0)
 		{
 			flag = 1;
-			//printf("No valid step.\n");
 			position empty_pos;
 			tmp_state.put(empty_pos);
 			continue;
@@ -86,22 +67,12 @@ int MCTSnode::Simulation()
 		{
 			flag = 0;
 			num_valid_pos = nextValidPos.size();
-			/*
-      		printf("num_valid_pos: %d\n", num_valid_pos);
-      		for(int i = 0; i< num_valid_pos; i++){
-        		printf("the ith: %d, row: %d, col: %d\n", i, nextValidPos[i].row, nextValidPos[i].col);
-      		}
-			*/
-			
         	uniform_int_distribution<> dis(0, num_valid_pos - 1);
 			int index = dis(gen);
-      		//printf("choose index: %d\n", index);
 			nextPos = nextValidPos[index];
 			tmp_state.put(nextPos);
-      		//tmp_state.print();
 		}
 	}
-	//cout << "end of simulation" << endl;
 	char nb_white = tmp_state.get_white();
 	char nb_black = tmp_state.get_black();
  	
@@ -156,13 +127,12 @@ bool MCTStree::MCTSsearch(double t, struct position &best_pos)
 		if (pos.size() == 0)
 		{
 			//put an empty chessman and it will change turn
-      struct position emptypos;
-			tmp->state.put(emptypos);
+			tmp->state.put(position());
 			pos = tmp->get_state().findall();
 			//if no place to put, game over and propagate
 			if (pos.size() == 0)
 			{
-				cout << "game over" << endl;
+				//cout << "game over" << endl;
 				char white = tmp->state.get_black();
 				char black = tmp->state.get_white();
 				int win;

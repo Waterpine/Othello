@@ -46,10 +46,10 @@ public:
 	void set_board(char** board);
 	//receive turn
 	void set_turn(char turn);
-	// get num
-	char get_num();
 	//get turn
 	char get_turn();
+	//get num of chessman on the board
+	char get_num();
 	//print the chess board
 	void print();
 	//search the board and get the number of black
@@ -68,12 +68,9 @@ public:
 	void put(struct position &pos);
 	//find the position with max num
 	struct position find_max(std::vector<struct position> r);
+	//judge if game is over
+	bool is_gameover();
 };
-
-inline char chess::get_num()
-{
-	return num;
-}
 
 inline void chess::set_black()
 {
@@ -103,6 +100,11 @@ inline char chess::get_black()
 inline char chess::get_white()
 {
 	return white;
+}
+
+inline char chess::get_num()
+{
+	return num;
 }
 
 inline void chess::set_board(char** board)
