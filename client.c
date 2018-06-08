@@ -14,12 +14,13 @@
   
 #define SERVER_PORT 5000  
 #define BUFSIZE 1024
+
 /* 
  连接到服务器后，会不停循环，等待输入， 
  输入quit后，断开与服务器的连接 
  */  
 
-char * create_session(int clientSocket)
+int create_session(int clientSocket)
 {
     int ret, i, h;
     char str1[4096], str2[4096], buf[BUFSIZE], *str;
@@ -68,7 +69,7 @@ char * create_session(int clientSocket)
  
         if (h > 0) {
             memset(buf, 0, 4096);
-            i= read(clientSocket, buf, 4095);
+            i = read(clientSocket, buf, 4095);
             if (i == 0) {
                 close(clientSocket);
                 printf("读取数据报文时发现远端关闭，该线程终止！\n");
@@ -77,19 +78,28 @@ char * create_session(int clientSocket)
             printf("%s\n", buf);
         }
     }
+    printf("done!");
+    return 0;
 }
 
-int move(int clientSocket, int x_pos, int y_pos, char player)
+int move(int clientSocket, char* x_pos, char* y_pos, char* player)
 {
     int send_num;
     char recv_buf [4096];
     char str1[4096];
-    char stm = x_pos + "/" + y_pos + "/" + player;
+    char * stm = NULL;
+    strcat(stm, x_pos);
+    strcat(stm,"/");
+    strcat(stm, y_pos);
+    strcat(stm, "/");
+    strcat(stm, player);
     while (1)
     {
         printf("begin send\n");
         memset(str1,0,4096);
-        strcat(str1, "POST move/" + stm + " HTTP/1.1\r\n");
+        strcat(str1, "POST move/"); 
+        strcat(str1, stm);
+        strcat(str1, "HTTP/1.1\r\n");
         strcat(str1, "Host: 47.89.179.202:5000\r\n");
         strcat(str1, "Content-Length: \r\n");
         strcat(str1, "Content-Type: text/html\r\n");
@@ -119,7 +129,7 @@ int move(int clientSocket, int x_pos, int y_pos, char player)
     }
 }
 
-char * board(int clientSocket)
+int board(int clientSocket)
 {
     int ret, i, h;
     char str1[4096], str2[4096], buf[BUFSIZE], *str;
@@ -207,9 +217,10 @@ int main()
         return 1;  
     }  
     printf("connect with destination host...\n");  
-    create_session(clientSocket);
-    move(clientSocket);
-    board(clientSocket);
+    int re;
+    re = create_session(clientSocket);
+    re = move(clientSocket,"3","2","W");
+    re = board(clientSocket);
     
     // Judging black and white by buf
 
