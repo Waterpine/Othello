@@ -1,5 +1,4 @@
 #include"MCTS.h"
-
 //a function for destroy node
 void destroy_node(MCTSnode *root)
 {
@@ -24,9 +23,12 @@ MCTStree* cmp_access(MCTStree *T, chess &src)
 	if (T->root->get_state().equal(src))
 		return T;
 	std::vector<MCTSnode*> vec = T->root->get_children();
-	//if no children, 
+	//if no children, delete the tree and create a new
 	if (vec.size() == 0)
-		return T;
+	{
+		destroy_tree(T);
+		return new MCTStree(src, src.get_turn());
+	}
 	int index = -1;
 	for (int i = 0; i < vec.size(); i++)
 	{
@@ -39,11 +41,12 @@ MCTStree* cmp_access(MCTStree *T, chess &src)
 	//cannot find the state, delete the tree and create a new
 	if (index == -1)
 	{
-		for (int i = 0; i < vec.size(); i++)
+		/*for (int i = 0; i < vec.size(); i++)
 		{
 			destroy_node(vec[i]);
 		}
-		delete T->root;
+		delete T->root;*/
+		destroy_tree(T);
 		return new MCTStree(src, src.get_turn());
 	}
 	//find the state, delete other node and access
