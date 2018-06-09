@@ -8,35 +8,6 @@
 
 using namespace std;
 
-const int BOARD_WIDTH = 8;
-const int BOARD_SIZE = 64;
-
-const int VALUE[BOARD_SIZE] = {
-	20, -3, 11,  8,  8, 11, -3, 20,
-	-3, -7, -4,  1,  1, -4, -7, -3,
-	11, -4,  2,  2,  2,  2, -4, 11,
-	8,  1,  2, -3, -3,  2,  1,  8,
-	8,  1,  2, -3, -3,  2,  1,  8,
-	11, -4,  2,  2,  2,  2, -4, 11,
-	-3, -7, -4,  1,  1, -4, -7, -3,
-	20, -3, 11,  8,  8, 11, -3, 20,
-};
-
-inline int toSquare(int x, int y)
-{
-	return x * BOARD_WIDTH + y;
-}
-
-inline int getSquareX(int sq)
-{
-	return sq / BOARD_WIDTH;
-}
-
-inline int getSquareY(int sq)
-{
-	return sq % BOARD_WIDTH;
-}
-
 struct position
 {
 	char row, col;
@@ -50,7 +21,7 @@ class chess
 //private:
 public:
 	unsigned long long board[2];
-	int turn;
+	char turn;
 	char num;
 	char white, black;
 	chess():turn(0),num(4),white(2), black(2)
@@ -68,8 +39,8 @@ public:
 		this->board[0]=a.board[0];
 		this->board[1]=a.board[1];
 	}
-
-	bool equal(const chess & a){
+ 
+ 	bool equal(const chess & a){
 		if(this->turn == a.turn &&
 		this->num == a.num &&
 		this->white == a.white &&
@@ -119,20 +90,7 @@ public:
 	void put(struct position &pos);
 	//find the position with max num
 	struct position find_max(std::vector<struct position> r);
-    bool is_gameover();
-	int getEval(int step = -1) const;
-	bool isBlackPlayer() const;
-	bool isWhitePlayer() const;
-	bool isEmpty(int sq) const;
-	bool isMyPiece(int sq) const;
-	bool isOppPiece(int sq) const;
-	bool isBlackPiece(int sq) const;
-	bool isWhitePiece(int sq) const;
-	int countAllPieces() const;
-	int countBlackPieces() const;
-	int countWhitePieces() const;
-	int countMyPieces() const;
-	int countOppPieces() const;
+  bool is_gameover();
 };
 
 inline char chess::get_num()
@@ -150,67 +108,9 @@ inline char chess::get_white()
 	return countWhitePieces();
 }
 
+
+
 inline char chess::get_turn()
 {
 	return turn;
-}
-
-inline bool chess::isBlackPlayer() const
-{
-	return turn == 0;
-}
-
-inline bool chess::isWhitePlayer() const
-{
-	return turn == 1;
-}
-
-inline bool chess::isEmpty(int sq) const
-{
-	return !(board[0] >> sq & 1) && !(board[1] >> sq & 1);
-}
-
-inline bool chess::isMyPiece(int sq) const
-{
-	return board[turn] >> sq & 1;
-}
-
-inline bool chess::isOppPiece(int sq) const
-{
-	return board[turn ^ 1] >> sq & 1;
-}
-
-inline bool chess::isBlackPiece(int sq) const
-{
-	return board[0] >> sq & 1;
-}
-
-inline bool chess::isWhitePiece(int sq) const
-{
-	return board[1] >> sq & 1;
-}
-
-inline int chess::countAllPieces() const
-{
-	return popcount(board[0] | board[1]);
-}
-
-inline int chess::countBlackPieces() const
-{
-	return popcount(board[0]);
-}
-
-inline int chess::countWhitePieces() const
-{
-	return popcount(board[1]);
-}
-
-inline int chess::countMyPieces() const
-{
-	return popcount(board[turn]);
-}
-
-inline int chess::countOppPieces() const
-{
-	return popcount(board[turn ^ 1]);
 }

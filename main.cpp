@@ -77,7 +77,7 @@ int main()
 			Tree = cmp_access(Tree, c);
 			std::cout << "this is ai turn: " << (int)c.get_turn() << std::endl;
 			c.print();
-			if (Tree->MCTSsearch(5, pos))
+			if (Tree->MCTSsearch(10, pos))
 			{
 				std::cout <<"ai pos: "<< (int)pos.row << ", " << (int)pos.col << std::endl;
 				c.put(pos);
@@ -90,7 +90,8 @@ int main()
 			else
 			{
 				std::cout << "PASS" << std::endl;
-				c.put(position());
+        struct position emptypos;
+				c.put(emptypos);
 			}
 			std::cout << "AI done.\n\n";
 			//change root because of my put
@@ -127,18 +128,13 @@ int main()
 			Human = new MCTStree(c, c.get_turn());
 			std::cout << "this is human turn: " << (int)c.get_turn() << std::endl;
 			c.print();
-			if (Human->MCTSsearch(5, pos1))
-			{
-				std::cout << "human pos: " << (int)pos1.row << ", " << (int)pos1.col << std::endl;
-				c.put(pos1);
-			}
-			else
-			{
-				std::cout << "PASS" << std::endl;
-				c.put(position());
-			}
-			std::cout << "Human done.\n\n";
-			destroy_tree(Human);
+      int row, col;
+      struct position pos;
+      scanf("%d%d", &row, &col);
+      pos.row = row;
+      pos.col = col;
+      c.put(pos);
+      
 		}
 		//Tree = new MCTStree(c, c.get_turn());
 	}
