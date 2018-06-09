@@ -143,62 +143,62 @@ inline char chess::get_turn()
 	return turn;
 }
 
-inline bool reversiEnv::isBlackPlayer() const
+inline bool chess::isBlackPlayer() const
 {
 	return turn == 0;
 }
 
-inline bool reversiEnv::isWhitePlayer() const
+inline bool chess::isWhitePlayer() const
 {
 	return turn == 1;
 }
 
-inline bool reversiEnv::isEmpty(int sq) const
+inline bool chess::isEmpty(int sq) const
 {
 	return !(board[0] >> sq & 1) && !(board[1] >> sq & 1);
 }
 
-inline bool reversiEnv::isMyPiece(int sq) const
+inline bool chess::isMyPiece(int sq) const
 {
 	return board[turn] >> sq & 1;
 }
 
-inline bool reversiEnv::isOppPiece(int sq) const
+inline bool chess::isOppPiece(int sq) const
 {
 	return board[turn ^ 1] >> sq & 1;
 }
 
-inline bool reversiEnv::isBlackPiece(int sq) const
+inline bool chess::isBlackPiece(int sq) const
 {
 	return board[0] >> sq & 1;
 }
 
-inline bool reversiEnv::isWhitePiece(int sq) const
+inline bool chess::isWhitePiece(int sq) const
 {
 	return board[1] >> sq & 1;
 }
 
-inline int reversiEnv::countAllPieces() const
+inline int chess::countAllPieces() const
 {
 	return popcount(board[0] | board[1]);
 }
 
-inline int reversiEnv::countBlackPieces() const
+inline int chess::countBlackPieces() const
 {
 	return popcount(board[0]);
 }
 
-inline int reversiEnv::countWhitePieces() const
+inline int chess::countWhitePieces() const
 {
 	return popcount(board[1]);
 }
 
-inline int reversiEnv::countMyPieces() const
+inline int chess::countMyPieces() const
 {
 	return popcount(board[turn]);
 }
 
-inline int reversiEnv::countOppPieces() const
+inline int chess::countOppPieces() const
 {
 	return popcount(board[turn ^ 1]);
 }
