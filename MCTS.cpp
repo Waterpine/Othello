@@ -90,12 +90,17 @@ MCTStree::MCTStree(chess state, char turn):turn(turn)
 
 bool MCTStree::MCTSsearch(double t, struct position &best_pos)
 {
+	if (root->state.findall().size() == 0)
+	{
+		return false;
+	}
 	root->set_father(nullptr);
 	timer T;
 	T.start();
 	int index;
 	int win;
 	MCTSnode* pnew_child;
+	//have no place to put
 	while(T.get_time() < t)
 	{
 		MCTSnode *tmp = root;
@@ -109,6 +114,7 @@ bool MCTStree::MCTSsearch(double t, struct position &best_pos)
 			}
 			tmp = tmp->get_children()[index];
 		}
+		
 		std::vector<struct position> pos = tmp->get_state().findall();
 		//change turn
 		if (pos.size() == 0)
@@ -121,7 +127,6 @@ bool MCTStree::MCTSsearch(double t, struct position &best_pos)
 			{
 				char white = tmp->state.get_black();
 				char black = tmp->state.get_white();
-				int win;
 				if (black > white)
 					win = 1;
 				else if (black < white)
@@ -152,10 +157,6 @@ bool MCTStree::MCTSsearch(double t, struct position &best_pos)
 	}
 	//choose which place to put chessman
 	std::vector<MCTSnode*> root_children = root->get_children();
-	if(root_children.size() == 0)
-	{
-		return false;
-	}
 	double best_score = -999999;
 	double score;
 	for(int i = 0; i < root_children.size(); i++)
