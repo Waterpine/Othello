@@ -227,3 +227,90 @@ bool chess::is_gameover()
 		return false;
 	return true;
 }
+
+int chess::getEval(int step) const
+{
+	int my_tiles = 0, opp_tiles = 0, my_front_tiles = 0, opp_front_tiles = 0;
+	double p = 0, c = 0, l = 0, m = 0, f = 0, d = 0;
+	double weight = 1;
+	
+	d = basicEval;
+	if (step != -1 && step < FIRSTLIMIT)	weight = -1;
+	// Piece difference, frontier disks and disk squares
+	//debug(board[player]);
+	
+	u64 frontier = getFrontier(board[player], board[player ^ 1]);
+	my_tiles = countMyPieces();
+	opp_tiles = countOppPieces();
+	my_front_tiles = popcount(frontier & board[player]);
+	opp_front_tiles = popcount(frontier & board[player ^ 1]);
+	if (my_tiles > opp_tiles)
+		p = weight*(100.0 * my_tiles) / (my_tiles + opp_tiles);
+	else if (my_tiles < opp_tiles)
+		p = -weight*(100.0 * opp_tiles) / (my_tiles + opp_tiles);
+	if (my_front_tiles > opp_front_tiles)
+		f = -(100.0 * my_front_tiles) / (my_front_tiles + opp_front_tiles);
+	else if (my_front_tiles < opp_front_tiles)
+		f = (100.0 * opp_front_tiles) / (my_front_tiles + opp_front_tiles);
+
+	// Corner occupancy
+	my_tiles = opp_tiles = 0;
+	my_tiles += isMyPiece(toSquare(0, 0));
+	opp_tiles += isOppPiece(toSquare(0, 0));
+	my_tiles += isMyPiece(toSquare(0, 7));
+	opp_tiles += isOppPiece(toSquare(0, 7));
+	my_tiles += isMyPiece(toSquare(7, 0));
+	opp_tiles += isOppPiece(toSquare(7, 0));
+	my_tiles += isMyPiece(toSquare(7, 7));
+	opp_tiles += isOppPiece(toSquare(7, 7));
+	c = 25 * (my_tiles - opp_tiles);
+
+	// Corner closeness
+	my_tiles = opp_tiles = 0;
+	if (isEmpty(toSquare(0, 0))) {
+		my_tiles += isMyPiece(toSquare(0, 1));
+		opp_tiles += isOppPiece(toSquare(0, 1));
+		my_tiles += isMyPiece(toSquare(1, 0));
+		opp_tiles += isOppPiece(toSquare(1, 0));
+		my_tiles += isMyPiece(toSquare(1, 1));
+		opp_tiles += isOppPiece(toSquare(1, 1));
+	}
+	if (isEmpty(toSquare(0, 7))) {
+		my_tiles += isMyPiece(toSquare(0, 6));
+		opp_tiles += isOppPiece(toSquare(0, 6));
+		my_tiles += isMyPiece(toSquare(1, 6));
+		opp_tiles += isOppPiece(toSquare(1, 6));
+		my_tiles += isMyPiece(toSquare(1, 7));
+		opp_tiles += isOppPiece(toSquare(1, 7));
+	}
+	if (isEmpty(toSquare(7, 0))) {
+		my_tiles += isMyPiece(toSquare(6, 0));
+		opp_tiles += isOppPiece(toSquare(6, 0));
+		my_tiles += isMyPiece(toSquare(6, 1));
+		opp_tiles += isOppPiece(toSquare(6, 1));
+		my_tiles += isMyPiece(toSquare(7, 1));
+		opp_tiles += isOppPiece(toSquare(7, 1));
+	}
+	if (isEmpty(toSquare(7, 7))) {
+		my_tiles += isMyPiece(toSquare(6, 6));
+		opp_tiles += isOppPiece(toSquare(6, 6));
+		my_tiles += isMyPiece(toSquare(6, 7));
+		opp_tiles += isOppPiece(toSquare(6, 7));
+		my_tiles += isMyPiece(toSquare(7, 6));
+		opp_tiles += isOppPiece(toSquare(7, 6));
+	}
+	l = -12.5 * (my_tiles - opp_tiles);
+
+	// Mobility
+	my_tiles = popcount(findCorrectMoves(board[player], board[player ^ 1]));
+	opp_tiles = popcount(findCorrectMoves(board[player ^ 1], board[player]));
+	if (my_tiles > opp_tiles)
+		m = (100.0 * my_tiles) / (my_tiles + opp_tiles);
+	else if (my_tiles < opp_tiles)
+		m = -(100.0 * opp_tiles) / (my_tiles + opp_tiles);
+
+	// final weighted score
+	double score = ((10 * p) + (801.724 * c) + (382.026 * l) + (78.922 * m) + (74.396 * f) + (10 * d)) * 100;
+
+	return (int)score;
+}
