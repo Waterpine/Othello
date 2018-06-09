@@ -16,8 +16,8 @@
 #define BUFSIZE 1024
 
 /* 
- ���ӵ��������󣬻᲻ͣѭ�����ȴ����룬 
- ����quit�󣬶Ͽ�������������� 
+ 连接到服务器后,会不断的循环,等待输入,
+ 输入quit后,断开与服务器的连接
  */  
 
 int create_session(int clientSocket)
@@ -41,11 +41,11 @@ int create_session(int clientSocket)
  
     ret = write(clientSocket,str1,strlen(str1));
     if (ret < 0) {
-        printf("����ʧ�ܣ����������%d��������Ϣ��'%s'\n",errno, strerror(errno));
+        printf("发送失败!错误代码是%d,错误信息是'%s'\n",errno, strerror(errno));
         exit(0);
     }
     else {
-        printf("��Ϣ���ͳɹ�����������%d���ֽڣ�\n\n", ret);
+        printf("消息发送成功，共发送了%d个字节!\n\n", ret);
     }
  
     FD_ZERO(&t_set1);
@@ -63,7 +63,7 @@ int create_session(int clientSocket)
         //if (h == 0) continue;
         if (h < 0) {
             close(clientSocket);
-            printf("�ڶ�ȡ���ݱ���ʱSELECT��⵽�쳣�����쳣�����߳���ֹ��\n");
+            printf("在读取数据报文时SELECT检测到异常,该异常导致线程终止!\n");
             return -1;
         };
  
@@ -72,7 +72,7 @@ int create_session(int clientSocket)
             i = read(clientSocket, buf, 4095);
             if (i == 0) {
                 close(clientSocket);
-                printf("��ȡ���ݱ���ʱ����Զ�˹رգ����߳���ֹ��\n");
+                printf("读取数据报文时发现远端关闭,该线程终止!\n");
                 return -1;
             }
             printf("%s\n", buf);
@@ -150,11 +150,11 @@ int board(int clientSocket)
  
     ret = write(clientSocket,str1,strlen(str1));
     if (ret < 0) {
-        printf("����ʧ�ܣ����������%d��������Ϣ��'%s'\n",errno, strerror(errno));
+        printf("发送失败!错误代码是%d,错误信息是'%s'\n",errno, strerror(errno));
         exit(0);
     }
     else {
-        printf("��Ϣ���ͳɹ�����������%d���ֽڣ�\n\n", ret);
+        printf("消息发送成功,共发送了%d字节!\n\n", ret);
     }
  
     FD_ZERO(&t_set1);
@@ -172,7 +172,7 @@ int board(int clientSocket)
         //if (h == 0) continue;
         if (h < 0) {
             close(clientSocket);
-            printf("�ڶ�ȡ���ݱ���ʱSELECT��⵽�쳣�����쳣�����߳���ֹ��\n");
+            printf("在读取数据报文时SELECT检测到异常,该异常导致线程终止!\n");
             return -1;
         };
  
@@ -181,7 +181,7 @@ int board(int clientSocket)
             i= read(clientSocket, buf, 4095);
             if (i == 0) {
                 close(clientSocket);
-                printf("��ȡ���ݱ���ʱ����Զ�˹رգ����߳���ֹ��\n");
+                printf("读取数据报文时发现远端关闭,该线程终止!\n");
                 return -1;
             }
             printf("%s\n", buf);
@@ -191,9 +191,9 @@ int board(int clientSocket)
 
 int main()  
 {  
-    //�ͻ���ֻ��Ҫһ���׽����ļ������������ںͷ�����ͨ��  
+    //客户端只需要一个套接字文件描述符，用于服务器通信  
     int clientSocket;  
-    //������������socket  
+    //描述服务器的socket  
     struct sockaddr_in serverAddr;  
     int ret, i, h;
     char str1[4096], str2[4096], buf[BUFSIZE], *str;
@@ -208,8 +208,8 @@ int main()
 
     serverAddr.sin_family = AF_INET;  
     serverAddr.sin_port = htons(SERVER_PORT);  
-    //ָ���������˵�ip�����ز��ԣ�127.0.0.1  
-    //inet_addr()�����������ʮ����IPת���������ֽ���IP  
+    //指定服务器端的ip,本地测试:127.0.0.1  
+    //inet_addr()函数,将点分十进制IP转换成网络字节序IP  
     serverAddr.sin_addr.s_addr = inet_addr("47.89.179.202");  
     if(connect(clientSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)  
     {  

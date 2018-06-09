@@ -1,3 +1,17 @@
+#include <stdio.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <time.h>
+#include <errno.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/time.h>
+#include <netinet/in.h>
+#include <arpa/inet.h> 
+
 #include<cstdlib>
 #include<cmath>
 #include<cstdio>
@@ -5,6 +19,9 @@
 #include<random>
 #include "chess.h"
 #include "timer.h"
+
+#define SERVER_PORT 5000  
+#define BUFSIZE 1024
 
 class MCTSnode
 {
