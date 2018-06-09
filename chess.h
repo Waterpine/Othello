@@ -70,12 +70,12 @@ public:
 	}
 
 	bool equal(const chess & a){
-		if(this->turn == a.turn;
-		this->num == a.num;
-		this->white == a.white;
-		this->black == a.black;
-		this->board[0]==a.board[0];
-		this->board[1]==a.board[1];)
+		if(this->turn == a.turn &&
+		this->num == a.num &&
+		this->white == a.white &&
+		this->black == a.black &&
+		this->board[0]==a.board[0] &&
+		this->board[1]==a.board[1])
 			return true;
 		else return false;
 	}
@@ -121,6 +121,18 @@ public:
 	struct position find_max(std::vector<struct position> r);
     bool is_gameover();
 	int getEval(int step = -1) const;
+	bool isBlackPlayer() const;
+	bool isWhitePlayer() const;
+	bool isEmpty(int sq) const;
+	bool isMyPiece(int sq) const;
+	bool isOppPiece(int sq) const;
+	bool isBlackPiece(int sq) const;
+	bool isWhitePiece(int sq) const;
+	int countAllPieces() const;
+	int countBlackPieces() const;
+	int countWhitePieces() const;
+	int countMyPieces() const;
+	int countOppPieces() const;
 };
 
 inline char chess::get_num()
